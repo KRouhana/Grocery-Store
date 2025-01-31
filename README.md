@@ -2,6 +2,11 @@
 
 This document provides a high-level summary of various aspects of the GroceryStore application, including its architecture, domain model, persistence layer, business logic, GUI, build configuration, user roles, assignment scheduling, reviews, testing strategy, equipment management, data validation, and configuration details.
 
+
+
+https://github.com/user-attachments/assets/af88ce0c-f8e6-4802-ae7f-b59849ca0b01
+
+
 ---
 
 ## 1. Overall Project Structure & Architecture
