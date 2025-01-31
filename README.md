@@ -1,11 +1,3 @@
-# project-group-02
-
-## The Project
-
-You can find how to use the backend service endpoints [here]. 
-
-[here]:https://github.com/McGill-ECSE321-Winter2022/project-group-group-02/wiki/RESTful-service-documentation
-
 # GroceryStore Application Overview
 
 This document provides a high-level summary of various aspects of the GroceryStore application, including its architecture, domain model, persistence layer, business logic, GUI, build configuration, user roles, assignment scheduling, reviews, testing strategy, equipment management, data validation, and configuration details.
