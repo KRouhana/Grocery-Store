@@ -2,93 +2,103 @@
 
 ## The Project
 
-
-Frontend: https://grocerystore-frontend-best.herokuapp.com
-
-Backend: https://grocerystore-backend-best.herokuapp.com
-
 You can find how to use the backend service endpoints [here]. 
 
 [here]:https://github.com/McGill-ECSE321-Winter2022/project-group-group-02/wiki/RESTful-service-documentation
 
+# GroceryStore Application Overview
 
+This document provides a high-level summary of various aspects of the GroceryStore application, including its architecture, domain model, persistence layer, business logic, GUI, build configuration, user roles, assignment scheduling, reviews, testing strategy, equipment management, data validation, and configuration details.
 
+---
 
-## The Team
+## 1. Overall Project Structure & Architecture
+- **Layered Design**: The application is organized into **Controller**, **Service**, **Model**, and **DAO** layers, promoting separation of concerns.
+- **Entities** (e.g., `Customer.java`) reside in the Model layer, **business logic** (e.g., `createCustomer(...)`) in the Service layer, **database operations** in DAO repositories (e.g., `CustomerRepository.java`), and **request handling** in Controllers (e.g., `CustomerController.java`).
+- **Flow**: A client request hits the Controller → Service applies business rules → DAO (repository) performs CRUD → Controller returns the response.
 
-| Name | GitHub |Major |Year|
-| ------------- | ------------- |-----------|--|
-| Matthieu Hakim | [Matthieuhakim] | Software Engineering | U1 |
-| Cora Cheung | [coracheung] | Exchange Student | Exchange Student |
-| Karl Rouhana | [KRouhana] | Computer Engineering | U1 |
-| Ralph Nassar | [RalphsGit] | Computer Engineering | U1 |
-| Anaëlle Drai Laguéns | [anaelledrai] | Software Engineering | U2 |
+---
 
+## 2. Database & Persistence Layer
+- **PostgreSQL** is configured via `application.properties`, with JPA/Hibernate settings like `spring.jpa.hibernate.ddl-auto=update`.
+- **DAO Interfaces** (`OrderRepository.java`, `ShoppableItemRepository.java`, etc.) extend `CrudRepository` or `JpaRepository`, mapping directly to JPA entities (e.g., `Order.java`, `ShoppableItem.java`).
+- **Services** use these repositories for data access, isolating persistence details from business logic.
 
-[Matthieuhakim]:https://github.com/Matthieuhakim
-[coracheung]:https://github.com/coracheung
-[KRouhana]:https://github.com/KRouhana
-[RalphsGit]:https://github.com/RalphsGit
-[anaelledrai]: https://github.com/anaelledrai
+---
 
+## 3. Gradle Build & Dependencies
+- **Gradle Wrapper** ensures a consistent Gradle version across environments (`gradle-wrapper.properties`).
+- **Root `build.gradle`**: May define tasks like `stage`, helpful for deployment (e.g., Heroku).
+- **Spring Boot Plugins** and dependencies (e.g., `spring-boot-starter-web`, `spring-boot-starter-data-jpa`) facilitate web services and JPA. Testing libraries (`spring-boot-starter-test`, JUnit, Mockito) support robust test suites.
+- **Procfile** (for Heroku) references the built JAR and is invoked via Gradle tasks.
 
-### Roles and Time Spent
-| Name  | Roles/Tasks |Time Spent (Hours)|
-| ------------- | ------------- |---|
-| Matthieu Hakim | Requirements, Domain Model, Use-Case Diagrams, Persistence Layer Implementation, Testing of Persistence Layer | 30 |
-| Cora Cheung | Requirements, Domain Model, Use-Case Diagrams, Persistence Layer Implementation, Testing of Persistence Layer | 30 |
-| Karl Rouhana | Requirements, Domain Model, Use-Case Diagrams, Persistence Layer Implementation, Testing of Persistence Layer | 30 |
-| Ralph Nassar | Requirements, Domain Model, Use-Case Diagrams, Persistence Layer Implementation, Testing of Persistence Layer | 30 |
-| Anaëlle Drai Laguéns | Requirements, Domain Model, Use-Case Diagrams, Persistence Layer Implementation, Testing of Persistence Layer | 30 |
+---
 
-Click for [Project Report Deliverable 1] !
+## 4. Spring Boot Configuration & Entry Point
+- **`GroceryStoreBackendApplication.java`**:
+  - Annotated with `@SpringBootApplication`, combining auto-configuration, component scanning, and configuration settings.
+  - The `main` method calls `SpringApplication.run(...)`, launching the Spring context.
+  - **Component Scanning** automatically detects and registers Controllers, Services, and Repositories within the base package.
 
-[Project Report Deliverable 1]:https://github.com/McGill-ECSE321-Winter2022/project-group-group-02/wiki/Project-Report-Deliverable-1
+---
 
+## 5. Domain Model Details
+- **Entity Classes**: `@Entity` annotations map classes like `Customer`, `Order`, `ShoppableItem` to database tables.
+- **Relationships**:
+  - **One-to-Many** examples: A `Customer` can have multiple `Order`s.
+  - **Many-to-Many** examples: An `Employee` might have multiple `DailySchedule`s, and vice versa.
+- **Inheritance**: `Person.java` can be a base class for `Customer`, `Employee`, `Owner`, sharing common fields like `name`, `email`, etc.
 
-### Roles and Time Spent
-| Name  | Roles/Tasks |Time Spent (Hours)|
-| ------------- | ------------- |---|
-| Matthieu Hakim | Implementation of Owner, Review services, controller & unit tests, software quality assurance plan, project report | 35 |
-| Cora Cheung | Implementation of Daily Schedule, Store services, controller & unit tests, software quality assurance plan, project report | 35 |
-| Karl Rouhana | Implementation of Order, OrderItem services, controller & unit tests, software quality assurance plan, project report | 35 |
-| Ralph Nassar | Implementation of Shoppable Item, Unavailable Item services, controller & unit tests, software quality assurance plan, project report | 35 |
-| Anaëlle Drai Laguéns | Implementation of Customer, Employee services, controller & unit tests, software quality assurance plan, project report| 35 |
+---
 
-Click for [Project Report Deliverable 2] !
+## 6. Controllers & REST Endpoints
+- **RESTful Mappings**: `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping` define endpoints (e.g., `/create_order`, `/delete_order`).
+- **Request/Response Handling**:
+  - `@RequestBody` or `@RequestParam` parse input;
+  - `@ResponseBody` / `ResponseEntity` return data.
+- **Delegation**: Controllers pass incoming data to Services for logic (e.g., placing an order) and return results (often as DTOs).
 
-[Project Report Deliverable 2]:https://github.com/McGill-ECSE321-Winter2022/project-group-group-02/wiki/Project-Report-Deliverable-2
+---
 
-### Roles and Time Spent
-| Name  | Roles/Tasks |Time Spent (Hours)|
-| ------------- | ------------- |---|
-| Matthieu Hakim | Implementation of View Orders, Browse items, Leave Review pages, architecture model, project report | 45 |
-| Cora Cheung | Implementation of Manage Store Information, Add and Delete Daily Schedule pages, architecture model, project report| 45 |
-| Karl Rouhana | Implementation of Change Order Status, Employee Management pages, architecture model, project report| 45 |
-| Ralph Nassar | Implementation of View Items, Add Items pages, architecture model, project report | 45 |
-| Anaëlle Drai Laguéns | Implementation of Login, Sign In Customer and Update Account pages, architecture model, project report| 45 |
+## 7. Services & Business Logic
+- **Core Logic**: Classes like `CustomerService.java` or `OrderService.java` contain methods (`createCustomer(...)`, `placeOrder(...)`).
+- **Validations & Rules**: For instance, ensuring a new customer doesn’t already exist, or confirming stock availability before creating an order.
+- **DAO Interaction**: Services use repositories (DAO layer) for persistence operations, often via `@Autowired`.
 
-Click for [Project Report Deliverable 3] !
+---
 
-[Project Report Deliverable 3]:https://github.com/McGill-ECSE321-Winter2022/project-group-group-02/wiki/Project-Report-Deliverable-3
+## 8. Frontend Integration & GUI (Vue.js)
+- **Components** (`BrowseItems.vue`, `Login.vue`, `OwnerMenu.vue`) handle user interactions, making API calls (e.g., via Axios) to backend endpoints.
+- **Vue Router** (`router/index.js`) configures routes (`/browse`, `/login`, etc.) and can include navigation guards.
+- **State Management**: Often uses Vuex for global state (e.g., storing logged-in user info), plus services in `src/services` to encapsulate API calls.
 
+---
 
-### Roles and Time Spent
-| Name  | Roles/Tasks |Time Spent (Hours)|
-| ------------- | ------------- |---|
-| Matthieu Hakim | Implementation of View Orders, User documentation, project report | 35 |
-| Cora Cheung | Implementation of Main Menu, User documentation, project report | 35 |
-| Karl Rouhana | Implementation of Create Order, User documentation, project report| 35 |
-| Ralph Nassar | Implementation of Browse Items, User documentation, project report | 35 |
-| Anaëlle Drai Laguéns | Implementation of Login, Sign In and Update Customer page, User documentation, project report | 35 |
+## 9. Testing Strategy (Unit & Integration Tests)
+- **Unit Tests**: Typically in service and dao test classes, using JUnit + Mockito.
+  - **Service tests** mock repositories to isolate logic.
+  - **DAO tests** verify CRUD operations with in-memory or test database.
+- **Integration Tests**: `@SpringBootTest` loads the full application context, ensuring multiple layers (Controller → Service → DAO → Database) work together.
+- **Transactional tests** roll back changes after each run, keeping tests repeatable and isolated.
 
-Click for [Project Report Deliverable 4] !
+---
 
-[Project Report Deliverable 4]:https://github.com/McGill-ECSE321-Winter2022/project-group-group-02/wiki/Project-Report-Deliverable-4
+## 10. Security & Login Flow
+- **Manual Authentication**: `LoginController` + `LoginService` validate credentials by checking repositories (Customer vs. Employee vs. Owner).
+- **Role Determination**: Identifies user type by returned entity instance (Customer, Owner, etc.).
+- **No Spring Security** in the provided info; the application uses custom logic for sessions/tokens or direct checks.
 
+---
 
+## 11. Configuration & Environment-Specific Details
+- **Spring Profiles**: Possible separate config files (e.g., `application-dev.properties`, `application-test.properties`) for different environments.
+- **Procfile**: For Heroku deployment, specifying how to run the app with Gradle.
+- **Environment Variables**: Store database credentials (`SPRING_DATASOURCE_URL`, etc.) and port details (`PORT`), allowing flexible runtime settings.
 
+---
 
+## Overall Takeaway
+The **GroceryStore** application showcases a well-structured, layered architecture (**Controller → Service → DAO → Model**) backed by **Spring Boot** and **Gradle**. The frontend (**Vue.js**) interacts through **REST endpoints**, and thorough **testing** ensures reliability. Authentication and environment-specific configurations are handled in a flexible, largely custom manner, making the application **scalable** and **maintainable**.
 
 
 
