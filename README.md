@@ -1,6 +1,6 @@
 # GroceryStore Application Overview
 
-This document provides a high-level summary of various aspects of the GroceryStore application, including its architecture, domain model, persistence layer, business logic, GUI, build configuration, user roles, assignment scheduling, reviews, testing strategy, equipment management, data validation, and configuration details.
+The **GroceryStore** application showcases a well-structured, layered architecture (**Controller → Service → DAO → Model**) backed by **Spring Boot** and **Gradle**. The frontend (**Vue.js**) interacts through **REST endpoints**, and thorough **testing** ensures reliability. Authentication and environment-specific configurations are handled in a flexible, largely custom manner, making the application **scalable** and **maintainable**.
 
 
 
@@ -93,9 +93,6 @@ https://github.com/user-attachments/assets/af88ce0c-f8e6-4802-ae7f-b59849ca0b01
 - **Environment Variables**: Store database credentials (`SPRING_DATASOURCE_URL`, etc.) and port details (`PORT`), allowing flexible runtime settings.
 
 ---
-
-## Overall Takeaway
-The **GroceryStore** application showcases a well-structured, layered architecture (**Controller → Service → DAO → Model**) backed by **Spring Boot** and **Gradle**. The frontend (**Vue.js**) interacts through **REST endpoints**, and thorough **testing** ensures reliability. Authentication and environment-specific configurations are handled in a flexible, largely custom manner, making the application **scalable** and **maintainable**.
 
 
 
